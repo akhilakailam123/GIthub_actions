@@ -24,4 +24,4 @@ jobs:
           pip install pytest
 
       - name: Run script
-        run: python -m pytest sample_program.py
+        run: python sample_program.py
