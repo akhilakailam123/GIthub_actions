@@ -1,9 +1,19 @@
 name: Python CI
 
 on:
-  push:
-    branches:
-      - master
+  workflow_dispatch:
+    inputs:
+      user_name:
+        description: 'Enter username'
+        required: true
+      environment:
+        description: 'Select environment (prod/INT)'
+        required: true
+        default: 'INT'
+        type: choice
+        options:
+          - prod
+          - INT
 
 jobs:
   build:
