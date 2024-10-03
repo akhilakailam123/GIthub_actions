@@ -33,7 +33,7 @@ jobs:
         run: |
           echo "Simulating password encryption for ${{ github.event.inputs.user_name }}..."
           # In a real scenario, replace this with actual encryption logic
-          encrypted_password=$(echo "password" | openssl enc -aes-256-cbc -a -salt)
+          encrypted_password=$(echo "password" | openssl enc -aes-256-cbc -a -salt -pass pass:mysecretpass)
           echo "Encrypted password: $encrypted_password"
           echo "::set-output name=encrypted_password::$encrypted_password"
         shell: bash
