@@ -1,4 +1,4 @@
-name: Python CI
+name: Password update Test Workflow
 
 on:
   workflow_dispatch:
@@ -16,22 +16,40 @@ on:
           - INT
 
 jobs:
-  build:
+  update-password:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Set up Python
-        uses: actions/setup-python@v2
-        with:
-          python-version: '3.9'
-
-      - name: Install dependencies
+      - name: Display Inputs
         run: |
-          python -m pip install --upgrade pip
-          pip install pytest
+          echo "Username: ${{ github.event.inputs.user_name }}"
+          echo "Environment: ${{ github.event.inputs.environment }}"
 
-      - name: Run script
-        run: python sample_program.py
+      - name: Simulate Password Encryption
+        id: encrypt_password
+        run: |
+          echo "Simulating password encryption for ${{ github.event.inputs.user_name }}..."
+          # In a real scenario, replace this with actual encryption logic
+          encrypted_password=$(echo "password" | openssl enc -aes-256-cbc -a -salt)
+          echo "Encrypted password: $encrypted_password"
+          echo "::set-output name=encrypted_password::$encrypted_password"
+        shell: bash
+        
+      - name: Simulate Updating Password for Clusters
+        run: |
+          echo "Updating password for ${{ github.event.inputs.user_name }} in ${{ github.event.inputs.environment }} environment..."
+          # Here you would update the clusters (this is just a placeholder)
+          echo "Simulated update for all clusters using ${{ github.event.inputs.user_name }}"
+          
+      - name: Commit changes to SCM (Simulation)
+        run: |
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "actions@github.com"
+          git add .
+          git commit -m "Update password for ${{ github.event.inputs.user_name }}"
+          echo "No actual changes to push, just a simulation."
+          # Uncomment the following line if you are making actual changes
+          # git push origin ${{ github.event.inputs.environment }}
