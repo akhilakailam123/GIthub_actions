@@ -40,7 +40,7 @@ jobs:
         run: |
           clusters=("cluster1" "cluster2" "cluster3")
           for cluster in "${clusters[@]}"; do
-            xml_file="./${{ github.event.inputs.environment }}/$cluster.xml"
+            xml_file="./$cluster.xml"
             temp_xml_file="./${{ github.event.inputs.environment }}/$cluster.tmp.xml"
             echo "Creating/Updating temporary file $temp_xml_file"
             
