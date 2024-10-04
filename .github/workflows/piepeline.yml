@@ -38,7 +38,6 @@ jobs:
 
       - name: Create Temp File and Update Password for Clusters
         run: |
-          # Create the environment directory if it doesn't exist
           mkdir -p "./${{ github.event.inputs.environment }}"
 
           clusters=("cluster1" "cluster2" "cluster3")
@@ -47,20 +46,17 @@ jobs:
             temp_xml_file="./${{ github.event.inputs.environment }}/$cluster.tmp.xml"
             echo "Creating/Updating temporary file $temp_xml_file"
             
-            # Create a new temp XML file with updated password using echo
             echo "<cluster>" > "$temp_xml_file"
             echo "  <name>$cluster</name>" >> "$temp_xml_file"
             echo "  <username>${{ github.event.inputs.user_name }}</username>" >> "$temp_xml_file"
             echo "  <encrypted_password>${{ steps.encrypt_password.outputs.encrypted_password }}</encrypted_password>" >> "$temp_xml_file"
             echo "</cluster>" >> "$temp_xml_file"
 
-            # Remove the old XML file if it exists
             if [ -f "$xml_file" ]; then
               echo "Removing old XML file: $xml_file"
               rm "$xml_file"
             fi
 
-            # Rename the temp file to the original file name
             echo "Renaming $temp_xml_file to $xml_file"
             mv "$temp_xml_file" "$xml_file"
           done
@@ -74,4 +70,4 @@ jobs:
           git commit -m "Updated password for ${{ github.event.inputs.user_name }} in ${{ github.event.inputs.environment }} environment"
           
           # Push changes to the appropriate environment branch
-          git push origin ${{ github.event.inputs.environment }}
+          git push origin HEAD:${{ github.event.inputs.environment }}
