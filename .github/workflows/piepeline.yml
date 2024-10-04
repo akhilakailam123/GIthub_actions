@@ -43,7 +43,27 @@ jobs:
           echo "Updating password for ${{ github.event.inputs.user_name }} in ${{ github.event.inputs.environment }} environment..."
           # Here you would update the clusters (this is just a placeholder)
           echo "Simulated update for all clusters using ${{ github.event.inputs.user_name }}"
+
+      - name: Create or Update XML Files for Clusters
+        run: |
+          # List of clusters (you can expand this list)
+          clusters=("cluster1" "cluster2" "cluster3")
           
+          # Create XML files for each cluster
+          for cluster in "${clusters[@]}"; do
+            xml_file="./${{ github.event.inputs.environment }}/$cluster.xml"
+            echo "Creating/Updating $xml_file"
+            
+            # Create or update the XML file with encrypted password and user info
+            cat > $xml_file <<EOL
+<cluster>
+  <name>$cluster</name>
+  <username>${{ github.event.inputs.user_name }}</username>
+  <encrypted_password>${{ steps.encrypt_password.outputs.encrypted_password }}</encrypted_password>
+</cluster>
+EOL
+          done
+
       - name: Commit changes to SCM (Simulation)
         run: |
           git config --global user.name "GitHub Actions"
