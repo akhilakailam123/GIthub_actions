@@ -29,7 +29,6 @@ jobs:
         run: |
           echo "Username: ${{ github.event.inputs.user_name }}"
           echo "Environment: ${{ github.event.inputs.environment }}"
-
       - name: Simulate Password Encryption
         id: encrypt_password
         run: |
@@ -42,7 +41,6 @@ jobs:
       - name: Create Temp File and Update Password for Clusters
         run: |
           mkdir -p "./${{ github.event.inputs.environment }}"
-
           clusters=("cluster1" "cluster2" "cluster3")
           for cluster in "${clusters[@]}"; do
             xml_file="./$cluster.xml"
@@ -54,16 +52,13 @@ jobs:
             echo "  <username>${{ github.event.inputs.user_name }}</username>" >> "$temp_xml_file"
             echo "  <encrypted_password>${{ steps.encrypt_password.outputs.encrypted_password }}</encrypted_password>" >> "$temp_xml_file"
             echo "</cluster>" >> "$temp_xml_file"
-
             if [ -f "$xml_file" ]; then
               echo "Removing old XML file: $xml_file"
               rm "$xml_file"
             fi
-
             echo "Renaming $temp_xml_file to $xml_file"
             mv "$temp_xml_file" "$xml_file"
           done
-
       - name: Commit changes to SCM
         run: |
           git config --global user.name "GitHub Actions"
