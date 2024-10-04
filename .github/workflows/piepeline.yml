@@ -1,5 +1,5 @@
 name: Password update Test Workflow
- 
+
 on:
   workflow_dispatch:
     inputs:
@@ -10,6 +10,7 @@ on:
         description: 'Select environment (prod/INT)'
         required: true
         default: 'INT'
+        type: choice
         options:
           - prod
           - INT
@@ -31,32 +32,18 @@ jobs:
         id: encrypt_password
         run: |
           echo "Simulating password encryption for ${{ github.event.inputs.user_name }}..."
+          # In a real scenario, replace this with actual encryption logic
           encrypted_password=$(echo "password" | openssl enc -aes-256-cbc -a -salt -pass pass:mysecretpass)
-          echo "encrypted_password=$encrypted_password" >> $GITHUB_OUTPUT
+          echo "Encrypted password: $encrypted_password"
+          echo "::set-output name=encrypted_password::$encrypted_password"
         shell: bash
         
       - name: Simulate Updating Password for Clusters
         run: |
           echo "Updating password for ${{ github.event.inputs.user_name }} in ${{ github.event.inputs.environment }} environment..."
+          # Here you would update the clusters (this is just a placeholder)
           echo "Simulated update for all clusters using ${{ github.event.inputs.user_name }}"
-
-      - name: Create or Update XML Files for Clusters
-        run: |
-          clusters=("cluster1" "cluster2" "cluster3")
-          for cluster in "${clusters[@]}"; do
-            xml_file="./${{ github.event.inputs.environment }}/$cluster.xml"
-            echo "Creating/Updating $xml_file"
-      
-            # Use the cat with heredoc inside the run block
-            cat <<EOL > "$xml_file"
-      <cluster>
-        <name>$cluster</name>
-        <username>${{ github.event.inputs.user_name }}</username>
-        <encrypted_password>${{ steps.encrypt_password.outputs.encrypted_password }}</encrypted_password>
-      </cluster>
-      EOL
-          done
-
+          
       - name: Commit changes to SCM (Simulation)
         run: |
           git config --global user.name "GitHub Actions"
@@ -65,9 +52,10 @@ jobs:
                 git add .
                 git commit -m "Update password for ${{ github.event.inputs.user_name }}"
               )
-
-          if [ $(git rev-parse HEAD) != $(git rev-parse @{u}) ]; then
-            git push origin ${{ github.event.inputs.environment }}
-          else
-            echo "No changes to push."
-          fi
+          
+              # Only push if there were changes
+              if [ $(git rev-parse HEAD) != $(git rev-parse @{u}) ]; then
+                git push origin ${{ github.event.inputs.environment }}
+              else
+                echo "No changes to push."
+              fi
