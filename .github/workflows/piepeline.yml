@@ -47,7 +47,7 @@ jobs:
           env="${{ github.event.inputs.environment }}"
           encrypted_password="${{ steps.encrypt_password.outputs.encrypted_password }}"
 
-          for cluster_dir in cluster1 cluster2 cluster3; do
+          for cluster_dir in apisec invex; do
             xml_file="$cluster_dir/$env.xml"
             if [ -f "$xml_file" ]; then
               echo "Updating $xml_file for user $username"
