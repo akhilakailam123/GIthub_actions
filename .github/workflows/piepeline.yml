@@ -38,7 +38,9 @@ jobs:
 
       - name: Create Temp File and Update Password for Clusters
         run: |
+          mkdir -p "./${{ github.event.inputs.environment }}"
           clusters=("cluster1" "cluster2" "cluster3")
+          
           for cluster in "${clusters[@]}"; do
             xml_file="./$cluster.xml"
             temp_xml_file="./${{ github.event.inputs.environment }}/$cluster.tmp.xml"
