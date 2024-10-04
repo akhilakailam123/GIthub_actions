@@ -68,12 +68,9 @@ jobs:
         run: |
           git config --global user.name "GitHub Actions"
           git config --global user.email "actions@github.com"
-
-          git add . # Stage all changes
-          git commit -m "Updated password for ${{ github.event.inputs.user_name }} in ${{ github.event.inputs.environment }} environment"
-
-          # Pull changes from the remote branch with rebase
-          git pull --rebase origin ${{ github.event.inputs.environment }}
-
-          # Push changes to the appropriate environment branch
-          git push origin HEAD:${{ github.event.inputs.environment }}
+          
+          git add ./${{ github.event.inputs.environment }}/*.xml
+          git commit -m "Updated password for ${{ github.event.inputs.user_name }} in ${{ github.event.inputs.environment }} environment" || echo "No changes to commit"
+          
+          # Push changes directly to the main branch
+          git push origin main
