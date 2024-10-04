@@ -1,0 +1,7 @@
+<cluster>
+  <name>invex</name>
+  <aliases>
+		<alias name="aliasPwuser3" password="password3"/>
+		<alias name="aliasPwuser1" password="password1"/>
+	</aliases>
+</cluster>
