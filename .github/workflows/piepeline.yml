@@ -9,10 +9,10 @@ on:
       environment:
         description: 'Select environment (prod/INT)'
         required: true
-        default: 'INT'
+        default: 'int'
         options:
           - prod
-          - INT
+          - int
 
 permissions:
   contents: write
