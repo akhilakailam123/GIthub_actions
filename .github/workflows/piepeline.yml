@@ -87,6 +87,8 @@ jobs:
           
           git add .
           git commit -m "Updated password for ${{ github.event.inputs.user_name }} in ${{ github.event.inputs.environment }} environment"
+
+          git pull origin ${{ github.event.inputs.environment }} --rebase
           
           # Push changes to the appropriate environment branch
           git push origin HEAD:${{ github.event.inputs.environment }}
