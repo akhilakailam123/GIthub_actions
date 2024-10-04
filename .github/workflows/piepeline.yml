@@ -13,10 +13,10 @@ on:
         options:
           - prod
           - INT
-
+          
 permissions:
   contents: write
-
+  
 jobs:
   update-password:
     runs-on: ubuntu-latest
@@ -24,8 +24,6 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
-        with:
-          fetch-depth: 0  # Ensures all branches are fetched
 
       - name: Display Inputs
         run: |
@@ -47,7 +45,7 @@ jobs:
 
           clusters=("cluster1" "cluster2" "cluster3")
           for cluster in "${clusters[@]}"; do
-            xml_file="./${{ github.event.inputs.environment }}/$cluster.xml"
+            xml_file="./$cluster.xml"
             temp_xml_file="./${{ github.event.inputs.environment }}/$cluster.tmp.xml"
             echo "Creating/Updating temporary file $temp_xml_file"
             
@@ -63,7 +61,7 @@ jobs:
             fi
 
             echo "Renaming $temp_xml_file to $xml_file"
-            mv "$temp_xml_file" "$xml_file" && echo "Renamed successfully" || echo "Renaming failed"
+            mv "$temp_xml_file" "$xml_file"
           done
 
       - name: Commit changes to SCM
@@ -71,8 +69,8 @@ jobs:
           git config --global user.name "GitHub Actions"
           git config --global user.email "actions@github.com"
           
-          git add "./${{ github.event.inputs.environment }}/*.xml"
-          git commit -m "Updated password for ${{ github.event.inputs.user_name }} in ${{ github.event.inputs.environment }} environment" || echo "No changes to commit"
+          git add .
+          git commit -m "Updated password for ${{ github.event.inputs.user_name }} in ${{ github.event.inputs.environment }} environment"
           
-          # Push changes to the main branch
-          git push origin HEAD:master  # Change 'main' to the name of your default branch if different
+          # Push changes to the appropriate environment branch
+          git push origin HEAD:${{ github.event.inputs.environment }}
