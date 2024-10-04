@@ -1,0 +1,7 @@
+<cluster>
+  <name>apisec</name>
+  <aliases>
+		<alias name="aliasPwuser1" password="password1"/>
+		<alias name="aliasPwuser2" password="password2"/>
+	</aliases>
+</cluster>
