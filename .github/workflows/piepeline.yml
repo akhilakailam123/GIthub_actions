@@ -16,7 +16,7 @@ on:
           
 permissions:
   contents: write
-  
+
 jobs:
   update-password:
     runs-on: ubuntu-latest
@@ -24,11 +24,14 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
+        with:
+          fetch-depth: 0  # Ensures all history is fetched
 
       - name: Display Inputs
         run: |
           echo "Username: ${{ github.event.inputs.user_name }}"
           echo "Environment: ${{ github.event.inputs.environment }}"
+
       - name: Simulate Password Encryption
         id: encrypt_password
         run: |
@@ -40,11 +43,10 @@ jobs:
 
       - name: Create Temp File and Update Password for Clusters
         run: |
-          mkdir -p "./${{ github.event.inputs.environment }}"
           clusters=("cluster1" "cluster2" "cluster3")
           for cluster in "${clusters[@]}"; do
             xml_file="./$cluster.xml"
-            temp_xml_file="./${{ github.event.inputs.environment }}/$cluster.tmp.xml"
+            temp_xml_file="./$cluster.tmp.xml"
             echo "Creating/Updating temporary file $temp_xml_file"
             
             echo "<cluster>" > "$temp_xml_file"
@@ -52,20 +54,23 @@ jobs:
             echo "  <username>${{ github.event.inputs.user_name }}</username>" >> "$temp_xml_file"
             echo "  <encrypted_password>${{ steps.encrypt_password.outputs.encrypted_password }}</encrypted_password>" >> "$temp_xml_file"
             echo "</cluster>" >> "$temp_xml_file"
+
             if [ -f "$xml_file" ]; then
               echo "Removing old XML file: $xml_file"
               rm "$xml_file"
             fi
+
             echo "Renaming $temp_xml_file to $xml_file"
             mv "$temp_xml_file" "$xml_file"
           done
+
       - name: Commit changes to SCM
         run: |
           git config --global user.name "GitHub Actions"
           git config --global user.email "actions@github.com"
           
-          git add .
-          git commit -m "Updated password for ${{ github.event.inputs.user_name }} in ${{ github.event.inputs.environment }} environment"
-          
-          # Push changes to the appropriate environment branch
-          git push origin HEAD:${{ github.event.inputs.environment }}
+          git add .  # Ensure all changes are staged
+          git commit -m "Updated password for ${{ github.event.inputs.user_name }} in master branch" || echo "No changes to commit"
+
+          # Push changes to the master branch (change to main if that's your default branch)
+          git push origin master  
