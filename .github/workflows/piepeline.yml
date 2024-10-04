@@ -13,7 +13,10 @@ on:
         options:
           - prod
           - INT
-
+          
+permissions:
+  contents: write
+  
 jobs:
   update-password:
     runs-on: ubuntu-latest
