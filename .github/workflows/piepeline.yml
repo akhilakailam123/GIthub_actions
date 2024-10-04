@@ -53,7 +53,7 @@ jobs:
               echo "Updating $xml_file for user $username"
 
               # Use sed to replace the password in the matching alias
-              sed -i "/<alias name=\"aliasPw${username}\"/s/password=\"[^\"]*\"/password=\"{RSA:${encrypted_password}}\"/" "$xml_file"
+              sed -i.bak "/<alias name=\"aliasPw${username}\"/s/password=\"[^\"]*\"/password=\"{RSA:${encrypted_password}}\"/" "$xml_file"
 
               echo "Updated password in $xml_file"
             else
