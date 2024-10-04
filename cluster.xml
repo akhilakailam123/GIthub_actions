@@ -1,0 +1,5 @@
+<cluster>
+  <name>cluster1</name>
+  <username>example_user</username>
+  <encrypted_password>encrypted_password_value</encrypted_password>
+</cluster>
