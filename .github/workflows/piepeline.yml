@@ -13,7 +13,7 @@ on:
         options:
           - prod
           - INT
-          
+
 permissions:
   contents: write
 
@@ -41,36 +41,32 @@ jobs:
           echo "encrypted_password=$encrypted_password" >> $GITHUB_OUTPUT
         shell: bash
 
-      - name: Create Temp File and Update Password for Clusters
+      - name: Update Password for User in XML Files
         run: |
-          clusters=("cluster1" "cluster2" "cluster3")
-          for cluster in "${clusters[@]}"; do
-            xml_file="./$cluster.xml"
-            temp_xml_file="./$cluster.tmp.xml"
-            echo "Creating/Updating temporary file $temp_xml_file"
-            
-            echo "<cluster>" > "$temp_xml_file"
-            echo "  <name>$cluster</name>" >> "$temp_xml_file"
-            echo "  <username>${{ github.event.inputs.user_name }}</username>" >> "$temp_xml_file"
-            echo "  <encrypted_password>${{ steps.encrypt_password.outputs.encrypted_password }}</encrypted_password>" >> "$temp_xml_file"
-            echo "</cluster>" >> "$temp_xml_file"
+          username="${{ github.event.inputs.user_name }}"
+          env="${{ github.event.inputs.environment }}"
+          encrypted_password="${{ steps.encrypt_password.outputs.encrypted_password }}"
 
+          for cluster_dir in cluster1 cluster2 cluster3; do
+            xml_file="$cluster_dir/$env.xml"
             if [ -f "$xml_file" ]; then
-              echo "Removing old XML file: $xml_file"
-              rm "$xml_file"
-            fi
+              echo "Updating $xml_file for user $username"
 
-            echo "Renaming $temp_xml_file to $xml_file"
-            mv "$temp_xml_file" "$xml_file"
+              # Use sed to replace the password in the matching alias
+              sed -i "/<alias name=\"aliasPw${username}\"/s/password=\"[^\"]*\"/password=\"{RSA:${encrypted_password}}\"/" "$xml_file"
+
+              echo "Updated password in $xml_file"
+            else
+              echo "File $xml_file does not exist."
+            fi
           done
 
       - name: Commit changes to SCM
         run: |
           git config --global user.name "GitHub Actions"
           git config --global user.email "actions@github.com"
-          
-          git add .  # Ensure all changes are staged
-          git commit -m "Updated password for ${{ github.event.inputs.user_name }} in master branch" || echo "No changes to commit"
 
-          # Push changes to the master branch (change to main if that's your default branch)
-          git push origin master  
+          git add .  # Stage all changes
+          git commit -m "Updated password for ${{ github.event.inputs.user_name }} in ${{ github.event.inputs.environment }} environment" || echo "No changes to commit"
+
+          git push origin master  # Push to master branch
