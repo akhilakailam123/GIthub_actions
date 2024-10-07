@@ -2,6 +2,6 @@
   <name>invex</name>
   <aliases>
 		<alias name="aliasPwuser1" password="{RSA:password1}"/>
-		<alias name="aliasPwuser2" password="{AES:U2FsdGVkX195YvzdjS/tZT99YTwNNLHAxHdlD119LhE=}"/>
+		<alias name="aliasPwuser2" password="{AES:U2FsdGVkX1+xOI7t8917d/eZWQfEXULdyKi1f/pFqUs=}"/>
 	</aliases>
 </cluster>
