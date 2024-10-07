@@ -1,7 +1,7 @@
 <cluster>
   <name>apisec</name>
   <aliases>
-		<alias name="aliasPwuser1" password="{AES:U2FsdGVkX1/M2tqh8QGPw035mUqJM02NmlgkYvVvsJ8=}"/>
+		<alias name="aliasPwuser1" password="{AES:U2FsdGVkX18+EJc3iyvSTQ+Ipe8I1wEnkXktS7glzAodWnS1e36hl3Jg6c16ilX5}"/>
 		<alias name="aliasPwuser2" password="{RSA:password2"/>
 	</aliases>
 </cluster>
