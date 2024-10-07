@@ -25,7 +25,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
         with:
-          fetch-depth: 0  # Ensures all history is fetched
+          fetch-depth: 0
 
       - name: Display Inputs
         run: |
@@ -47,19 +47,32 @@ jobs:
           env="${{ github.event.inputs.environment }}"
           encrypted_password="${{ steps.encrypt_password.outputs.encrypted_password }}"
 
-          for cluster_dir in apisec invex; do
+          for cluster_dir in apisex invex; do
             xml_file="$cluster_dir/$env.xml"
             if [ -f "$xml_file" ]; then
-              echo "Updating $xml_file for user $username"
+              echo "Processing $xml_file for user $username"
 
-              # Use sed to replace the password in the matching alias
-              sed -i "/<alias name=\"aliasPw${username}\"/s|password=\"[^\"]*\"|password=\"{RSA:${encrypted_password}}\"|" "$xml_file"
+              # Extract the current encryption method from the password attribute
+              encryptionMethod=$(grep -oP "(?<=<alias name=\"aliasPw${username}\" password=\"{)[^:]+(?=:)" "$xml_file")
+
+              if [[ $encryptionMethod == "AES" ]]; then
+                echo "Detected AES encryption method"
+                # AES Encryption logic
+                sed -i "/<alias name=\"aliasPw${username}\"/s|password=\"[^\"]*\"|password=\"{AES:${encrypted_password}}\"|" "$xml_file"
+              elif [[ $encryptionMethod == "RSA" ]]; then
+                echo "Detected RSA encryption method"
+                # RSA Encryption logic
+                sed -i "/<alias name=\"aliasPw${username}\"/s|password=\"[^\"]*\"|password=\"{RSA:${encrypted_password}}\"|" "$xml_file"
+              else
+                echo "### WARNING ### Unknown encryption method in $xml_file"
+              fi
 
               echo "Updated password in $xml_file"
             else
               echo "File $xml_file does not exist."
             fi
           done
+        shell: bash
 
       - name: Commit changes to SCM
         run: |
