@@ -47,7 +47,7 @@ jobs:
           env="${{ github.event.inputs.environment }}"
           encrypted_password="${{ steps.encrypt_password.outputs.encrypted_password }}"
 
-          for cluster_dir in apisex invex; do
+          for cluster_dir in apisec invex; do
             xml_file="$cluster_dir/$env.xml"
             if [ -f "$xml_file" ]; then
               echo "Processing $xml_file for user $username"
