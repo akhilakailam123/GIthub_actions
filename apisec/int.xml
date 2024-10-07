@@ -1,7 +1,7 @@
 <cluster>
   <name>apisec</name>
   <aliases>
-		<alias name="aliasPwuser1" password="{RSA:AOudJo6Cm6R1ViePd2X7TlplVK6emc2I2eQqU3DmKFqxcuuBRHzNuuc6h3xs7V2E4MZUipQXlW+O4Mq/cOw0egSd2qPK/TpK2mASi/vkx7ExOIUg5HFrvFdK3gNoreC/K/kXIdz2xRmsqOHCr/l9QaZsMQvTrseF1yrhWfDsBmSzUtdIssnMtjLCqg84HAkufoSD/aRlU1MYXGpopSRWshb+E95VSDbg2H7mi2m4NtYnSVmbaJ1AyNqa/JPIAYrt7a7Fs9w4kmXvbxTnaytZkp66ubRwKroriVhySXP5D29YuR73/07bNZ/1fhP4usYpAjK7nMb9RxocjQGKDlByHA==}"/>
+		<alias name="aliasPwuser1" password="{AES:nullpass}"/>
 		<alias name="aliasPwuser2" password="{RSA:password2"/>
 	</aliases>
 </cluster>
