@@ -51,35 +51,28 @@ jobs:
 
       - name: Update Password for User in XML Files
         run: |
-          username="${{ github.event.inputs.user_name }}"
-          env="${{ github.event.inputs.environment }}"
-          aes_encrypted_password="${{ steps.encrypt_password.outputs.aes_encrypted_password }}"
-          rsa_encrypted_password="${{ steps.encrypt_password.outputs.rsa_encrypted_password }}"
-
-          for cluster_dir in apisec invex; do
-            xml_file="$cluster_dir/$env.xml"
-            if [ -f "$xml_file" ]; then
-              echo "Processing $xml_file for user $username"
-
-              # Extract the current encryption method from the password attribute
-              encryptionMethod=$(grep -oP "(?<=<alias name=\"aliasPw${username}\" password=\"{)[^:]+(?=:)" "$xml_file")
-
-              if [[ $encryptionMethod == "AES" ]]; then
-                echo "Detected AES encryption method"
-                sed -i "/<alias name=\"aliasPw${username}\"/s|password=\"[^\"]*\"|password=\"{AES:${aes_encrypted_password}}\"|" "$xml_file"
-              elif [[ $encryptionMethod == "RSA" ]]; then
-                echo "Detected RSA encryption method"
-                sed -i "/<alias name=\"aliasPw${username}\"/s|password=\"[^\"]*\"|password=\"{RSA:${rsa_encrypted_password}}\"|" "$xml_file"
-              else
-                echo "### WARNING ### Unknown encryption method in $xml_file"
-              fi
-
-              echo "Updated password in $xml_file"
-            else
-              echo "File $xml_file does not exist."
-            fi
-          done
+          echo "Simulating password encryption for ${{ github.event.inputs.user_name }}..."
+      
+          # Generate RSA key pair
+          openssl genpkey -algorithm RSA -out private_key.pem -pkeyopt rsa_keygen_bits:2048
+          openssl rsa -pubout -in private_key.pem -out public_key.pem
+          
+          # Generate AES encrypted password
+          aes_encrypted_password=$(echo "password" | openssl enc -aes-256-cbc -a -salt -pass pass:mysecretpass)
+          echo "AES Encrypted password: $aes_encrypted_password"
+          
+          # Generate RSA encrypted password
+          rsa_encrypted_password=$(echo -n "password" | openssl pkeyutl -encrypt -pubin -inkey public_key.pem | base64)
+          echo "RSA Encrypted password: $rsa_encrypted_password"
+          
+          # Output encrypted passwords for later steps
+          echo "aes_encrypted_password=$aes_encrypted_password" >> $GITHUB_OUTPUT
+          echo "rsa_encrypted_password=$rsa_encrypted_password" >> $GITHUB_OUTPUT
+          
+          # Clean up keys
+          rm -f private_key.pem public_key.pem
         shell: bash
+
 
 
       - name: Commit changes to SCM
