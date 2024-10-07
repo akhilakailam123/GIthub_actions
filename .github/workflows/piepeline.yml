@@ -6,8 +6,11 @@ on:
       user_name:
         description: 'Enter username'
         required: true
+      New_Password:
+        description: 'Enter the new password'
+        required: true
       environment:
-        description: 'Select environment (prod/INT)'
+        description: 'Select environment (prod/int)'
         required: true
         default: 'int'
         options:
@@ -31,6 +34,7 @@ jobs:
         run: |
           echo "Username: ${{ github.event.inputs.user_name }}"
           echo "Environment: ${{ github.event.inputs.environment }}"
+          echo "NewPassword: ${{ github.event.inputs.New_Password }}"
 
       - name: Simulate Password Encryption
         id: encrypt_password
@@ -41,15 +45,18 @@ jobs:
           openssl genpkey -algorithm RSA -out private_key.pem -pkeyopt rsa_keygen_bits:2048
           openssl rsa -pubout -in private_key.pem -out public_key.pem
 
+          # Use the new password from workflow inputs
+          new_password="${{ github.event.inputs.New_Password }}"
+
           # Generate AES encrypted password
-          aes_encrypted_password=$(echo "password" | openssl enc -aes-256-cbc -a -salt -pbkdf2 -pass pass:mysecretpass)
+          aes_encrypted_password=$(echo "$new_password" | openssl enc -aes-256-cbc -a -salt -pbkdf2 -pass pass:mysecretpass)
           echo "AES Encrypted password: $aes_encrypted_password"
           
           # Generate RSA encrypted password
-          rsa_encrypted_password=$(echo -n "password" | openssl pkeyutl -encrypt -pubin -inkey public_key.pem | base64 | tr -d '\n')
+          rsa_encrypted_password=$(echo -n "$new_password" | openssl pkeyutl -encrypt -pubin -inkey public_key.pem | base64 | tr -d '\n')
           echo "RSA Encrypted password: $rsa_encrypted_password"
           
-          # Output encrypted passwords for later steps
+          # Output encrypted passwords 
           echo "aes_encrypted_password=$aes_encrypted_password" >> $GITHUB_OUTPUT
           echo "rsa_encrypted_password=$rsa_encrypted_password" >> $GITHUB_OUTPUT
           
@@ -91,8 +98,6 @@ jobs:
             fi
           done
         shell: bash
-
-
 
       - name: Commit changes to SCM
         run: |
