@@ -46,7 +46,7 @@ jobs:
           echo "AES Encrypted password: $aes_encrypted_password"
           
           # Generate RSA encrypted password
-          rsa_encrypted_password=$(echo -n "password" | openssl pkeyutl -encrypt -pubin -inkey public_key.pem | base64)
+          rsa_encrypted_password=$(echo -n "password" | openssl pkeyutl -encrypt -pubin -inkey public_key.pem | base64 | tr -d '\n')
           echo "RSA Encrypted password: $rsa_encrypted_password"
           
           # Output encrypted passwords for later steps
@@ -56,6 +56,7 @@ jobs:
           # Clean up keys
           rm -f private_key.pem public_key.pem
         shell: bash
+
 
       - name: Update Password for User in XML Files
         run: |
