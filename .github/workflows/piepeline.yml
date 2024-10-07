@@ -81,5 +81,6 @@ jobs:
 
           git add .  # Stage all changes
           git commit -m "Updated password for ${{ github.event.inputs.user_name }} in ${{ github.event.inputs.environment }} environment" || echo "No changes to commit"
-
+          # Pull latest changes from the remote branch
+          git pull --rebase origin master
           git push origin master  # Push to master branch
