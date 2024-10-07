@@ -36,16 +36,25 @@ jobs:
         id: encrypt_password
         run: |
           echo "Simulating password encryption for ${{ github.event.inputs.user_name }}..."
-          encrypted_password=$(echo "password" | openssl enc -aes-256-cbc -a -salt -pass pass:mysecretpass)
-          echo "Encrypted password: $encrypted_password"
-          echo "encrypted_password=$encrypted_password" >> $GITHUB_OUTPUT
+          
+          # Generate AES encrypted password
+          aes_encrypted_password=$(echo "password" | openssl enc -aes-256-cbc -a -salt -pass pass:mysecretpass)
+          echo "AES Encrypted password: $aes_encrypted_password"
+          
+          # Generate RSA encrypted password
+          rsa_encrypted_password=$(echo "password" | openssl rsautl -encrypt -pubin -inkey public_key.pem | base64)
+          echo "RSA Encrypted password: $rsa_encrypted_password"
+          
+          echo "aes_encrypted_password=$aes_encrypted_password" >> $GITHUB_OUTPUT
+          echo "rsa_encrypted_password=$rsa_encrypted_password" >> $GITHUB_OUTPUT
         shell: bash
 
       - name: Update Password for User in XML Files
         run: |
           username="${{ github.event.inputs.user_name }}"
           env="${{ github.event.inputs.environment }}"
-          encrypted_password="${{ steps.encrypt_password.outputs.encrypted_password }}"
+          aes_encrypted_password="${{ steps.encrypt_password.outputs.aes_encrypted_password }}"
+          rsa_encrypted_password="${{ steps.encrypt_password.outputs.rsa_encrypted_password }}"
 
           for cluster_dir in apisec invex; do
             xml_file="$cluster_dir/$env.xml"
@@ -57,12 +66,10 @@ jobs:
 
               if [[ $encryptionMethod == "AES" ]]; then
                 echo "Detected AES encryption method"
-                # AES Encryption logic
-                sed -i "/<alias name=\"aliasPw${username}\"/s|password=\"[^\"]*\"|password=\"{AES:${encrypted_password}}\"|" "$xml_file"
+                sed -i "/<alias name=\"aliasPw${username}\"/s|password=\"[^\"]*\"|password=\"{AES:${aes_encrypted_password}}\"|" "$xml_file"
               elif [[ $encryptionMethod == "RSA" ]]; then
                 echo "Detected RSA encryption method"
-                # RSA Encryption logic
-                sed -i "/<alias name=\"aliasPw${username}\"/s|password=\"[^\"]*\"|password=\"{RSA:${encrypted_password}}\"|" "$xml_file"
+                sed -i "/<alias name=\"aliasPw${username}\"/s|password=\"[^\"]*\"|password=\"{RSA:${rsa_encrypted_password}}\"|" "$xml_file"
               else
                 echo "### WARNING ### Unknown encryption method in $xml_file"
               fi
@@ -73,6 +80,7 @@ jobs:
             fi
           done
         shell: bash
+
 
       - name: Commit changes to SCM
         run: |
