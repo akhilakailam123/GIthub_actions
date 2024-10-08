@@ -36,46 +36,80 @@ jobs:
           declare -A passwords
           passwords=( ["david"]="${{ github.event.inputs.password_david }}" ["warner"]="${{ github.event.inputs.password_warner }}" )
 
+          set -x  # Enable debugging to trace the script
+          
           for username in "${!passwords[@]}"; do
             if [ -n "${passwords[$username]}" ]; then
               echo "Processing password for $username..."
               new_password="${passwords[$username]}"
-
-              for cluster_dir in apisec invex; do
+              
+              for cluster_dir in apisec invex; do 
                 xml_file="$cluster_dir/$env.xml"
-                
-                if [ -f "$xml_file" ]; then
-                  echo "Processing $xml_file for user $username"
-                  
-                  # Extract the encryption method
-                  encryptionMethod=$(grep -oP "(?<=<alias name=\"aliasPw${username}\" password=\"{)[^:]+(?=:)" "$xml_file")
-                  
-                  if [[ $encryptionMethod == "AES" ]]; then
-                    echo "Detected AES encryption method for $username"
-                    aes_encrypted_password=$(echo "$new_password" | openssl enc -aes-256-cbc -a -salt -pbkdf2 -pass pass:mysecretpass)
-                    sed -i "/<alias name=\"aliasPw${username}\"/s|password=\"[^\"]*\"|password=\"{AES:${aes_encrypted_password}}\"|" "$xml_file"
-                  elif [[ $encryptionMethod == "RSA" ]]; then
-                    echo "Detected RSA encryption method for $username"
-                    # Generate RSA key pair on-the-fly for encryption
-                    openssl genpkey -algorithm RSA -out private_key.pem -pkeyopt rsa_keygen_bits:2048
-                    openssl rsa -pubout -in private_key.pem -out public_key.pem
-                    rsa_encrypted_password=$(echo -n "$new_password" | openssl pkeyutl -encrypt -pubin -inkey public_key.pem | base64 | tr -d '\n')
-                    sed -i "/<alias name=\"aliasPw${username}\"/s|password=\"[^\"]*\"|password=\"{RSA:${rsa_encrypted_password}}\"|" "$xml_file"
-                    # Clean up RSA keys
-                    rm -f private_key.pem public_key.pem
-                  else
-                    echo "### WARNING ### Unknown encryption method for $username in $xml_file"
-                  fi
-                  
-                  echo "Updated password in $xml_file"
-                else
-                  echo "File $xml_file does not exist."
+                if [ ! -f "$xml_file" ]; then
+                  echo "Error: File $xml_file does not exist."
+                  continue
                 fi
+          
+                echo "Processing $xml_file for user $username"
+          
+                # Extract the encryption method
+                encryptionMethod=$(grep -oP "(?<=<alias name=\"aliasPw${username}\" password=\"{)[^:]+(?=:)" "$xml_file") || {
+                  echo "Error: Failed to extract encryption method for $username in $xml_file"
+                  continue
+                }
+          
+                if [[ -z $encryptionMethod ]]; then
+                  echo "### WARNING ### No encryption method found for $username in $xml_file"
+                  continue
+                fi
+          
+                if [[ $encryptionMethod == "AES" ]]; then
+                  echo "Detected AES encryption method for $username"
+                  aes_encrypted_password=$(echo "$new_password" | openssl enc -aes-256-cbc -a -salt -pbkdf2 -pass pass:mysecretpass) || {
+                    echo "Error: AES encryption failed for $username"
+                    continue
+                  }
+                  sed -i "/<alias name=\"aliasPw${username}\"/s|password=\"[^\"]*\"|password=\"{AES:${aes_encrypted_password}}\"|" "$xml_file" || {
+                    echo "Error: Failed to update AES password in $xml_file for $username"
+                    continue
+                  }
+          
+                elif [[ $encryptionMethod == "RSA" ]]; then
+                  echo "Detected RSA encryption method for $username"
+                  openssl genpkey -algorithm RSA -out private_key.pem -pkeyopt rsa_keygen_bits:2048 || {
+                    echo "Error: RSA key generation failed for $username"
+                    continue
+                  }
+                  openssl rsa -pubout -in private_key.pem -out public_key.pem || {
+                    echo "Error: RSA public key export failed for $username"
+                    rm -f private_key.pem public_key.pem
+                    continue
+                  }
+          
+                  rsa_encrypted_password=$(echo -n "$new_password" | openssl pkeyutl -encrypt -pubin -inkey public_key.pem | base64 | tr -d '\n') || {
+                    echo "Error: RSA encryption failed for $username"
+                    rm -f private_key.pem public_key.pem
+                    continue
+                  }
+          
+                  sed -i "/<alias name=\"aliasPw${username}\"/s|password=\"[^\"]*\"|password=\"{RSA:${rsa_encrypted_password}}\"|" "$xml_file" || {
+                    echo "Error: Failed to update RSA password in $xml_file for $username"
+                    rm -f private_key.pem public_key.pem
+                    continue
+                  }
+          
+                  # Clean up RSA keys
+                  rm -f private_key.pem public_key.pem
+                else
+                  echo "### WARNING ### Unknown encryption method for $username in $xml_file"
+                fi
+          
+                echo "Updated password in $xml_file"
               done
             fi
           done
-        shell: bash
-
+          
+          set +x  # Disable debugging after script completion
       - name: Commit changes to SCM
         run: |
           git config --global user.name "GitHub Actions"
