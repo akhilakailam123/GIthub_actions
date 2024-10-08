@@ -1,7 +1,7 @@
 <cluster>
   <name>invex</name>
   <aliases>
-		<alias name="aliasPwwarner" password="password3"/>
+		<alias name="aliasPwwarner" password="{AES:password3}"/>
 		<alias name="aliasPwdavid" password="{RSA:sPvOxw==}"/>
 	</aliases>
 </cluster>
