@@ -46,7 +46,7 @@ for server in "${!server_users[@]}"; do
 
         if [[ $encryptionMethod == "AES" ]]; then
           echo "Detected AES encryption method for $username"
-          aes_encrypted_password=$(echo "$new_password" | openssl enc -aes-256-cbc -a -salt -pbkdf2 -pass pass:$AES_SECRET_PASS) || {
+          aes_encrypted_password=$(echo "$new_password" | openssl enc -aes-256-cbc -a -salt -pbkdf2 -pass pass:mysecretpass) || {
             echo "Error: AES encryption failed for $username"
             continue
           }
