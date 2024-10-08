@@ -2,6 +2,6 @@
   <name>cluster2</name>
   <aliases>
 		<alias name="aliasPwwarner" password="{AES:U2FsdGVkX18R6S/S85t+LatgloGPQIHj0l/NG1osGBg=}"/>
-		<alias name="aliasPwdavid" password="{AES:U2FsdGVkX19dlHDwE2zqQFlfLCT5IubUbOal2v+Zd2c=}"/>
+		<alias name="aliasPwdavid" password="{AES:U2FsdGVkX1/cR2Q4ayI0sHzxcm0SoiKnfW+N3YQF/6g=}"/>
 	</aliases>
 </cluster>
