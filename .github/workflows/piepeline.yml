@@ -3,12 +3,12 @@ name: Password Update Workflow
 on:
   workflow_dispatch:
     inputs:
-      user_name:
-        description: 'Enter username'
-        required: true
-      New_Password:
-        description: 'Enter the new password'
-        required: true
+      password_david:
+        description: 'Enter the new password for David (optional)'
+        required: false
+      password_warner:
+        description: 'Enter the new password for Warner (optional)'
+        required: false
       environment:
         description: 'Select environment (prod/int)'
         required: true
@@ -30,71 +30,55 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Display Inputs
+      - name: Encrypt and Update Passwords in XML Files
         run: |
-          echo "Username: ${{ github.event.inputs.user_name }}"
-          echo "Environment: ${{ github.event.inputs.environment }}"
-          echo "NewPassword: ${{ github.event.inputs.New_Password }}"
-
-      - name: Simulate Password Encryption
-        id: encrypt_password
-        run: |
-          echo "Simulating password encryption for ${{ github.event.inputs.user_name }}..."
-
-          # Generate RSA key pair
-          openssl genpkey -algorithm RSA -out private_key.pem -pkeyopt rsa_keygen_bits:2048
-          openssl rsa -pubout -in private_key.pem -out public_key.pem
-
-          # Use the new password from workflow inputs
-          new_password="${{ github.event.inputs.New_Password }}"
-
-          # Generate AES encrypted password
-          aes_encrypted_password=$(echo "$new_password" | openssl enc -aes-256-cbc -a -salt -pbkdf2 -pass pass:mysecretpass)
-          echo "AES Encrypted password: $aes_encrypted_password"
-          
-          # Generate RSA encrypted password
-          rsa_encrypted_password=$(echo -n "$new_password" | openssl pkeyutl -encrypt -pubin -inkey public_key.pem | base64 | tr -d '\n')
-          echo "RSA Encrypted password: $rsa_encrypted_password"
-          
-          # Output encrypted passwords 
-          echo "aes_encrypted_password=$aes_encrypted_password" >> $GITHUB_OUTPUT
-          echo "rsa_encrypted_password=$rsa_encrypted_password" >> $GITHUB_OUTPUT
-          
-          # Clean up keys
-          rm -f private_key.pem public_key.pem
-        shell: bash
-
-
-      - name: Update Password for User in XML Files
-        run: |
-          username="${{ github.event.inputs.user_name }}"
           env="${{ github.event.inputs.environment }}"
-          encrypted_password_aes="${{ steps.encrypt_password.outputs.aes_encrypted_password }}"
-          encrypted_password_rsa="${{ steps.encrypt_password.outputs.rsa_encrypted_password }}"
+          declare -A passwords
+          passwords=( ["David"]="${{ github.event.inputs.password_david }}" ["Warner"]="${{ github.event.inputs.password_warner }}" )
 
-          for cluster_dir in apisec invex; do
-            xml_file="$cluster_dir/$env.xml"
-            if [ -f "$xml_file" ]; then
-              echo "Processing $xml_file for user $username"
-
-              # Extract the current encryption method from the password attribute
-              encryptionMethod=$(grep -oP "(?<=<alias name=\"aliasPw${username}\" password=\"{)[^:]+(?=:)" "$xml_file")
-
-              if [[ $encryptionMethod == "AES" ]]; then
-                echo "Detected AES encryption method"
-                # Update the AES password
-                sed -i "/<alias name=\"aliasPw${username}\"/s|password=\"[^\"]*\"|password=\"{AES:${encrypted_password_aes}}\"|" "$xml_file"
-              elif [[ $encryptionMethod == "RSA" ]]; then
-                echo "Detected RSA encryption method"
-                # Update the RSA password
-                sed -i "/<alias name=\"aliasPw${username}\"/s|password=\"[^\"]*\"|password=\"{RSA:${encrypted_password_rsa}}\"|" "$xml_file"
-              else
-                echo "### WARNING ### Unknown encryption method in $xml_file"
-              fi
-
-              echo "Updated password in $xml_file"
-            else
-              echo "File $xml_file does not exist."
+          for username in "${!passwords[@]}"; do
+          
+            if [ -n "${passwords[$username]}" ]; then
+            
+              echo "Processing password for $username..."
+              new_password="${passwords[$username]}"
+              
+              for cluster_dir in apisec invex; do
+              
+                xml_file="$cluster_dir/$env.xml"
+                if [ -f "$xml_file" ]; then
+                  echo "Processing $xml_file for user $username"
+                  
+                  # Extract the encryption method
+                  encryptionMethod=$(grep -oP "(?<=<alias name=\"aliasPw${username}\" password=\"{)[^:]+(?=:)" "$xml_file")
+                  
+                  if [[ $encryptionMethod == "AES" ]]; then
+                    echo "Detected AES encryption method for $username"
+                    aes_encrypted_password=$(echo "$new_password" | openssl enc -aes-256-cbc -a -salt -pbkdf2 -pass pass:mysecretpass)
+                    sed -i "/<alias name=\"aliasPw${username}\"/s|password=\"[^\"]*\"|password=\"{AES:${aes_encrypted_password}}\"|" "$xml_file"
+                  
+                  elif [[ $encryptionMethod == "RSA" ]]; then
+                    echo "Detected RSA encryption method for $username"
+                    
+                    # Generate RSA key pair on-the-fly for encryption
+                    openssl genpkey -algorithm RSA -out private_key.pem -pkeyopt rsa_keygen_bits:2048
+                    openssl rsa -pubout -in private_key.pem -out public_key.pem
+                    
+                    rsa_encrypted_password=$(echo -n "$new_password" | openssl pkeyutl -encrypt -pubin -inkey public_key.pem | base64 | tr -d '\n')
+                    
+                    sed -i "/<alias name=\"aliasPw${username}\"/s|password=\"[^\"]*\"|password=\"{RSA:${rsa_encrypted_password}}\"|" "$xml_file"
+                    
+                    # Clean up RSA keys
+                    rm -f private_key.pem public_key.pem
+                  else
+                    echo "### WARNING ### Unknown encryption method for $username in $xml_file"
+                  fi
+                  
+                  echo "Updated password in $xml_file"
+                else
+                  echo "File $xml_file does not exist."
+                fi
+              done
             fi
           done
         shell: bash
@@ -103,9 +87,7 @@ jobs:
         run: |
           git config --global user.name "GitHub Actions"
           git config --global user.email "actions@github.com"
-
-          git add .  # Stage all changes
-          git commit -m "Updated password for ${{ github.event.inputs.user_name }} in ${{ github.event.inputs.environment }} environment" || echo "No changes to commit"
-          # Pull latest changes from the remote branch
+          git add .
+          git commit -m "Updated passwords in ${{ github.event.inputs.environment }} environment" || echo "No changes to commit"
           git pull --rebase origin master
-          git push origin master  # Push to master branch
+          git push origin master
