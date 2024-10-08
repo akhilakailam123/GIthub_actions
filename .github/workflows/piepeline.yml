@@ -36,12 +36,21 @@ jobs:
           declare -A passwords
           passwords=( ["david"]="${{ github.event.inputs.password_david }}" ["warner"]="${{ github.event.inputs.password_warner }}" )
           
-          # List of servers to process
-          servers=("server1" "server2" "server3")  
+          # Associative array mapping servers to users
+          declare -A server_users
+          server_users=(
+            ["server1"]="david warner"
+            ["server2"]="david"
+            ["server3"]="warner"
+          )
 
-          for server in "${servers[@]}"; do
+          # Iterate over each server
+          for server in "${!server_users[@]}"; do
             echo "Processing server: $server"
-            for username in "${!passwords[@]}"; do
+            users="${server_users[$server]}"
+
+            # Iterate over each user in the current server
+            for username in $users; do
               if [ -n "${passwords[$username]}" ]; then
                 echo "Processing password for $username on $server..."
                 new_password="${passwords[$username]}"
@@ -109,6 +118,8 @@ jobs:
 
                   echo "Updated password in $xml_file"
                 done
+              else
+                echo "### WARNING ### No new password provided for $username on $server"
               fi
             done
           done
