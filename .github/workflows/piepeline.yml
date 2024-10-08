@@ -4,10 +4,10 @@ on:
   workflow_dispatch:
     inputs:
       password_david:
-        description: 'David (New password)'
+        description: 'Enter the new password for David (optional)'
         required: false
       password_warner:
-        description: 'Warner (New password)'
+        description: 'Enter the new password for Warner (optional)'
         required: false
       environment:
         description: 'Select environment (prod/int)'
@@ -32,19 +32,18 @@ jobs:
 
       - name: Encrypt and Update Passwords in XML Files
         run: |
-          env="int"
+          env="${{ github.event.inputs.environment }}"
           declare -A passwords
-          passwords=( ["David"]="newpass" ["Warner"]="" )
-          
-          set -x  # Enable debugging to trace the script
-          
+          passwords=( ["david"]="${{ github.event.inputs.password_david }}" ["warner"]="${{ github.event.inputs.password_warner }}" )
+
           for username in "${!passwords[@]}"; do
             if [ -n "${passwords[$username]}" ]; then
               echo "Processing password for $username..."
               new_password="${passwords[$username]}"
-              
+
               for cluster_dir in apisec invex; do
                 xml_file="$cluster_dir/$env.xml"
+                
                 if [ -f "$xml_file" ]; then
                   echo "Processing $xml_file for user $username"
                   
@@ -53,19 +52,15 @@ jobs:
                   
                   if [[ $encryptionMethod == "AES" ]]; then
                     echo "Detected AES encryption method for $username"
-                    aes_encrypted_password=$(echo "$new_password" | openssl enc -aes-256-cbc -a -salt -pbkdf2 -pass pass:mysecretpass) || exit 1
-                    sed -i "/<alias name=\"aliasPw${username}\"/s|password=\"[^\"]*\"|password=\"{AES:${aes_encrypted_password}}\"|" "$xml_file" || exit 1
-                  
+                    aes_encrypted_password=$(echo "$new_password" | openssl enc -aes-256-cbc -a -salt -pbkdf2 -pass pass:mysecretpass)
+                    sed -i "/<alias name=\"aliasPw${username}\"/s|password=\"[^\"]*\"|password=\"{AES:${aes_encrypted_password}}\"|" "$xml_file"
                   elif [[ $encryptionMethod == "RSA" ]]; then
                     echo "Detected RSA encryption method for $username"
-                    
                     # Generate RSA key pair on-the-fly for encryption
-                    openssl genpkey -algorithm RSA -out private_key.pem -pkeyopt rsa_keygen_bits:2048 || exit 1
-                    openssl rsa -pubout -in private_key.pem -out public_key.pem || exit 1
-                    
-                    rsa_encrypted_password=$(echo -n "$new_password" | openssl pkeyutl -encrypt -pubin -inkey public_key.pem | base64 | tr -d '\n') || exit 1
-                    sed -i "/<alias name=\"aliasPw${username}\"/s|password=\"[^\"]*\"|password=\"{RSA:${rsa_encrypted_password}}\"|" "$xml_file" || exit 1
-                    
+                    openssl genpkey -algorithm RSA -out private_key.pem -pkeyopt rsa_keygen_bits:2048
+                    openssl rsa -pubout -in private_key.pem -out public_key.pem
+                    rsa_encrypted_password=$(echo -n "$new_password" | openssl pkeyutl -encrypt -pubin -inkey public_key.pem | base64 | tr -d '\n')
+                    sed -i "/<alias name=\"aliasPw${username}\"/s|password=\"[^\"]*\"|password=\"{RSA:${rsa_encrypted_password}}\"|" "$xml_file"
                     # Clean up RSA keys
                     rm -f private_key.pem public_key.pem
                   else
@@ -79,8 +74,7 @@ jobs:
               done
             fi
           done
-          
-          set +x  # Disable debugging after script completion
+        shell: bash
 
       - name: Commit changes to SCM
         run: |
