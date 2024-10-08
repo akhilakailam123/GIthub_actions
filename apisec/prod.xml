@@ -1,7 +1,7 @@
 <cluster>
   <name>invex</name>
   <aliases>
-		<alias name="aliasPwuser1" password="{RSA:OOX9BZx1l+KKzuDMyVMSxkkP6D4r+wUSQ3B7ynYw6Y+iU1Iz/j7f9Vd/jTCt4zsncRypucmcnxbJCp000OXeasoxd6BYFnrIVAzVNzbe8k/NWWDwn530rlS6O+1A2mVPRGf1JhcftY+wUKlMqThe1fArhViqFU6eM4XRG9I7pyTmSME9LE7cZuSiJ1RkuY7f0ku/5mQFD1+Hk3S6S8ZijcRafrrzEX4EPQiZfJvqBW+87e9cNaF8BumpGKM512G0NV6oBqYwk++GFEQmRdWW0wqVcbwMWHgjHJJUOajh/3jzgHOE17wgcvs4/ru00rLG2zuRuk14BQ0ksmuWTZ6VoA==}"/>
-		<alias name="aliasPwuser2" password="{AES:U2FsdGVkX1+xOI7t8917d/eZWQfEXULdyKi1f/pFqUs=}"/>
+		<alias name="aliasPwdavid" password="{RSA:OOX9BZx1l+KKzuDMyVMSxkkP6D4r+wUSQ3B7ynYw6Y+iU1Iz/j7f9Vd/jTCt4zsncRypucmcnxbJCp000OXeasoxd6BYFnrIVAzVNzbe8k/NWWDwn530rlS6O+1A2mVPRGf1JhcftY+wUKlMqThe1fArhViqFU6eM4XRG9I7pyTmSME9LE7cZuSiJ1RkuY7f0ku/5mQFD1+Hk3S6S8ZijcRafrrzEX4EPQiZfJvqBW+87e9cNaF8BumpGKM512G0NV6oBqYwk++GFEQmRdWW0wqVcbwMWHgjHJJUOajh/3jzgHOE17wgcvs4/ru00rLG2zuRuk14BQ0ksmuWTZ6VoA==}"/>
+		<alias name="aliasPwwarner" password="{AES:U2FsdGVkX1+xOI7t8917d/eZWQfEXULdyKi1f/pFqUs=}"/>
 	</aliases>
 </cluster>
