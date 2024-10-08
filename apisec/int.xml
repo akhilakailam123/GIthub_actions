@@ -1,5 +1,5 @@
 <cluster>
-  <name>apisec</name>
+  <name>cluster1</name>
   <aliases>
 		<alias name="aliasPwdavid" password="{AES:qwe}"/>
 		<alias name="aliasPwwarner" password="{RSA:HlbkSJHR+kp31uAnpX1RciLD3/v2r4dTmWknEuZmAzaGbQZB2lNECPB/y/X1fDn8Vrs2J/I3ekeSAwKhqCMi1gHmujCGrj6ClPCqoxYuwNZQJOLsRa0no1bqhwUpTBBJXBd2ZF4DyR7vxDStq+sK8wV869YFzCDNtw730eKj9MMo6gVY8PdAd8CucR6lLHreZbzrVyeTSjIsy6WedmaR9jGeRzcbTWdQDEpbLsdx2oHcPSDHp64CM3E01ihy0AC6LyevHXGDJVp7YHky5zPzC0YILS7agLlAVpKlWO3ZcoCJMOAbJWd2+zdxq2rlZ1ITKpGSmVLsadIF2mxcS4LrFg==}"/>
