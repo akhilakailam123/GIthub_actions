@@ -35,8 +35,6 @@ jobs:
           env="${{ github.event.inputs.environment }}"
           declare -A passwords
           passwords=( ["david"]="${{ github.event.inputs.password_david }}" ["warner"]="${{ github.event.inputs.password_warner }}" )
-
-          set -x  # Enable debugging to trace the script
           
           for username in "${!passwords[@]}"; do
             if [ -n "${passwords[$username]}" ]; then
@@ -109,7 +107,6 @@ jobs:
             fi
           done
           
-          set +x  # Disable debugging after script completion
       - name: Commit changes to SCM
         run: |
           git config --global user.name "GitHub Actions"
