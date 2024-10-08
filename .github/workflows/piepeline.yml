@@ -4,10 +4,10 @@ on:
   workflow_dispatch:
     inputs:
       password_david:
-        description: 'Enter the new password for David (optional)'
+        description: 'David (New password)'
         required: false
       password_warner:
-        description: 'Enter the new password for Warner (optional)'
+        description: 'Warner (New password)'
         required: false
       environment:
         description: 'Select environment (prod/int)'
