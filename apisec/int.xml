@@ -1,7 +1,7 @@
 <cluster>
   <name>cluster1</name>
   <aliases>
-		<alias name="aliasPwdavid" password="{AES:U2FsdGVkX1/a0ZZc051c3mUB3n8CmhzWOCQJYH7EtPY=}"/>
-		<alias name="aliasPwwarner" password="{RSA:MIig8zwmzeCjFCTP76xgguJ+ERt8uJ14WNqVWHrdNHh7/SftBz9QL9PGq8+cav4LwdKmVd2S0ZDSZRqpxloO16HdqgkKGnCb4D6s9aeRXiet2jOjB7g3f2oxMV52lGWDtwdhN2bORXV6l0IrAjYiEhqaj75vXy45nT7LAQvKB1BZOoqNg3OA7veuT4JoD2D2KKgchTPhXCd1cWwP/8KnybXwxh/fdeGVN54dJvBq+ugL4VxwLSw2H6aiNnh3d/DjWcf8cfDCHIgMBTnWY9RipebpyxK7UGDaKFeBfOCK3VCZq9paQEf6EmLD/DJjXUx0zqTDwCMvpBcITgGNGjupRw==}"/>
+		<alias name="aliasPwdavid" password="{AES:U2FsdGVkX1+AkqHY6v3jtIaEQ4qBzbPvAnFY0Hinr+Q=}"/>
+		<alias name="aliasPwwarner" password="{RSA:L2ItMTD2FfCd2jREIbizRtn4kictRiqG8lfFCdtUUZnDe2sezU6B6u1g/CZWbH7GoHgORDxGI/cQs4f/Fw8QkQZH9IFad/kXC7Bux/UtRHs6Rang91KQmZUAq+ojuysRnBmXmCm8uP8y+vF3jf9pAFk20ZM7Y+lsQtS2obKdv1gmm9jm3p/gUuu0/ufG+TOvlDYBY67umNMSLodK0fHU9miopKlsDHFLTPXNmTwiEpumKsPGVifUOfszgvME1Qr3SeP/XbfDogSB4+SXQRU8SzTQ1zRaldLCbbjulDRoKVaeLMjyGay6JIRXwk/GmPufoZpz7g3sDA8YOnEGdC74ZA==}"/>
 	</aliases>
 </cluster>
