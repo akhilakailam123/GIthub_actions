@@ -1,7 +1,5 @@
 #!/bin/bash
 
-# This script updates passwords in XML files for specified users and servers
-
 env="$1"
 declare -A passwords
 passwords=( ["david"]="$2" ["warner"]="$3" )
@@ -34,6 +32,7 @@ for server in "${!server_users[@]}"; do
 
         echo "Processing $xml_file for user $username"
 
+        # Extract the encryption method
         encryptionMethod=$(grep -oP "(?<=<alias name=\"aliasPw${username}\" password=\"{)[^:]+(?=:)" "$xml_file") || {
           echo "Error: Failed to extract encryption method for $username in $xml_file"
           continue
@@ -57,16 +56,25 @@ for server in "${!server_users[@]}"; do
 
         elif [[ $encryptionMethod == "RSA" ]]; then
           echo "Detected RSA encryption method for $username"
-          openssl genpkey -algorithm RSA -out private_key.pem -pkeyopt rsa_keygen_bits:2048
-          openssl rsa -pubout -in private_key.pem -out public_key.pem
+          openssl genpkey -algorithm RSA -out private_key.pem -pkeyopt rsa_keygen_bits:2048 || {
+            echo "Error: RSA key generation failed for $username"
+            continue
+          }
+          openssl rsa -pubout -in private_key.pem -out public_key.pem || {
+            echo "Error: RSA public key export failed for $username"
+            rm -f private_key.pem public_key.pem
+            continue
+          }
 
           rsa_encrypted_password=$(echo -n "$new_password" | openssl pkeyutl -encrypt -pubin -inkey public_key.pem | base64 | tr -d '\n') || {
             echo "Error: RSA encryption failed for $username"
+            rm -f private_key.pem public_key.pem
             continue
           }
 
           sed -i "/<alias name=\"aliasPw${username}\"/s|password=\"[^\"]*\"|password=\"{RSA:${rsa_encrypted_password}}\"|" "$xml_file" || {
             echo "Error: Failed to update RSA password in $xml_file for $username"
+            rm -f private_key.pem public_key.pem
             continue
           }
 
