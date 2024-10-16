@@ -32,7 +32,7 @@ jobs:
 
       - name: Run password update script
         run: |
-          chmod +x password_update.sh
+          chmod +x update_passwords.sh
           ./update_passwords.sh "${{ github.event.inputs.environment }}" \
                                 "${{ github.event.inputs.password_david }}" \
                                 "${{ github.event.inputs.password_warner }}"
