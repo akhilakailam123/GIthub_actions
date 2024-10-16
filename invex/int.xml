@@ -1,7 +1,7 @@
 <cluster>
   <name>cluster2</name>
   <aliases>
-	  <alias name="aliasPwdavid" password="{AES:/ilNSk+erHaVM=}"/>
+	  <alias name="aliasPwdavid" password="{AES:U2FsdGVkX18fmCwz8saexhYNY+BeSHq9vbe5DfDuaco=}"/>
 	  <alias name="aliasPwwarner" password="{RSA:+/Q//==}"/>
 	</aliases>
 </cluster>
