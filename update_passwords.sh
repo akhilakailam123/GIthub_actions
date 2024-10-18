@@ -1,8 +1,13 @@
 #!/bin/bash
 
 env="$1"
+passwords_file="$2"
+
+# Load passwords from JSON file using jq
 declare -A passwords
-passwords=( ["david"]="$2" ["warner"]="$3" )
+while IFS="=" read -r user password; do
+  passwords[$user]=$password
+done < <(jq -r 'to_entries | .[] | "\(.key)=\(.value)"' "$passwords_file")
 
 # Associative array mapping servers to users
 declare -A server_users
@@ -19,9 +24,10 @@ for server in "${!server_users[@]}"; do
 
   # Iterate over each user in the current server
   for username in $users; do
-    if [ -n "${passwords[$username]}" ]; then
+    new_password="${passwords[$username]}"
+    
+    if [ -n "$new_password" ]; then
       echo "Processing password for $username on $server..."
-      new_password="${passwords[$username]}"
 
       for cluster_dir in apisec invex; do 
         xml_file="$cluster_dir/$env.xml"
