@@ -25,6 +25,7 @@ for server in "${!server_users[@]}"; do
   # Iterate over each user in the current server
   for username in $users; do
     new_password="${passwords[$username]}"
+    echo $new_password
     
     if [ -n "$new_password" ]; then
       echo "Processing password for $username on $server..."
