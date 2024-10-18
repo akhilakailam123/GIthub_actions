@@ -3,12 +3,9 @@ name: Password Update Workflow
 on:
   workflow_dispatch:
     inputs:
-      password_david:
-        description: 'David (Enter New password)'
-        required: false
-      password_warner:
-        description: 'Warner (Enter New password)'
-        required: false
+      user_passwords:
+        description: 'Enter passwords for users in Json format'
+        required: true
       environment:
         description: 'Select environment (prod/int)'
         required: true
@@ -30,13 +27,13 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Run password update script
+      - name: Parse Json Input and Run password update script
         run: |
+          passwords_json = "${{github.event.input.user_passwords}}"
+          echo $passwords_json > password.json
           chmod +x update_passwords.sh
-          ./update_passwords.sh "${{ github.event.inputs.environment }}" \
-                                "${{ github.event.inputs.password_david }}" \
-                                "${{ github.event.inputs.password_warner }}"
-
+          ./update_passwords.sh "${{ github.event.inputs.environment }}" passwords.json
+          
       - name: Commit changes to SCM
         run: |
           git config --global user.name "GitHub Actions"
