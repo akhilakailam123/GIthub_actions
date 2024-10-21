@@ -3,11 +3,17 @@
 env="$1"
 passwords_file="$2"
 
+# Ensure jq is installed
+if ! command -v jq &> /dev/null; then
+  echo "jq is required but not installed. Exiting."
+  exit 1
+fi
+
 # Load passwords from JSON file using jq
 declare -A passwords
 while IFS="=" read -r user password; do
   passwords[$user]=$password
-  echo "Loaded password for $user: ${passwords[$user]}"
+  echo "Loaded password for $user"
 done < <(jq -r 'to_entries | .[] | "\(.key)=\(.value)"' "$passwords_file")
 
 # Associative array mapping servers to users
@@ -27,12 +33,10 @@ for server in "${!server_users[@]}"; do
   for username in $users; do
     new_password="${passwords[$username]}"
     
-    # Debugging: Print the password for the user
-    echo "Password for $username: $new_password"
-
+    # Check if the password is available for the user
     if [ -n "$new_password" ]; then
       echo "Processing password for $username on $server..."
-
+      
       for cluster_dir in apisec invex; do 
         xml_file="$cluster_dir/$env.xml"
         if [ ! -f "$xml_file" ]; then
@@ -66,30 +70,18 @@ for server in "${!server_users[@]}"; do
 
         elif [[ $encryptionMethod == "RSA" ]]; then
           echo "Detected RSA encryption method for $username"
-          openssl genpkey -algorithm RSA -out private_key.pem -pkeyopt rsa_keygen_bits:2048 || {
-            echo "Error: RSA key generation failed for $username"
-            continue
-          }
-          openssl rsa -pubout -in private_key.pem -out public_key.pem || {
-            echo "Error: RSA public key export failed for $username"
-            rm -f private_key.pem public_key.pem
-            continue
-          }
 
+          # Assuming RSA public key already exists, no need to regenerate every time
           rsa_encrypted_password=$(echo -n "$new_password" | openssl pkeyutl -encrypt -pubin -inkey public_key.pem | base64 | tr -d '\n') || {
             echo "Error: RSA encryption failed for $username"
-            rm -f private_key.pem public_key.pem
             continue
           }
 
           sed -i "/<alias name=\"aliasPw${username}\"/s|password=\"[^\"]*\"|password=\"{RSA:${rsa_encrypted_password}}\"|" "$xml_file" || {
             echo "Error: Failed to update RSA password in $xml_file for $username"
-            rm -f private_key.pem public_key.pem
             continue
           }
 
-          # Clean up RSA keys
-          rm -f private_key.pem public_key.pem
         else
           echo "### WARNING ### Unknown encryption method for $username in $xml_file"
         fi
