@@ -1,15 +1,15 @@
 <cluster>
   <name>cluster1</name>
   <aliases>
-		<alias name="aliasPwdavid" password="{AES:U2FsdGVkX19qUFdWjui0wWctMwgCPJnPPuFysg1Lg1A=}"/>
-		<alias name="aliasPwwarner" password="{RSA:E5lWK7aASRakVw/IIICDV9BS32qMxNxmhcdKKDYwAhNyIDCTBQ/Kj2cNVwWG8T4Vm9WtSa/62D8Kg/i4+fc21nP1NVKmy7jtJvUfzz46S0X49W+uvtgTQf1L7JOwdP9hCq3vSv9gQU2k41ZtvR2XrZ5rGDnOtf+CM6nc95N5QTj5Q7twb62PICWuknQnnspNihZuWyra6bjOGsBzq5dNd52z9uX0GuQv3qK7FoYbhbkMnzhGvOm1Xytjp3J4tsYFp+2tlFGiGoBWXTz9aesp/0yzAowfpdFQvMnDxVSZani8nTkL9BAiwtr5bHMHH4FVgW8Qs+P8IoNjKGnKL9U20Q==}"/>
-		<alias name="aliasPwalice" password="{AES:examplepsswd}"/>
-	  	<alias name="aliasPwbob" password="{AES:examplepsswd}"/>
-	  	<alias name="aliasPwcharlie" password="{AES:examplepsswd}"/>
-	  	<alias name="aliasPweve" password="{AES:examplepsswd}"/>
-	  	<alias name="aliasPwfrank" password="{AES:examplepsswd}"/>
-	  	<alias name="aliasPwgrace" password="{AES:examplepsswd}"/>
-	  	<alias name="aliasPwheidi" password="{AES:examplepsswd}"/>
-	  	<alias name="aliasPwivan" password="{AES:examplepsswd}"/>  	
+		<alias name="aliasPwdavid" password="{AES:U2FsdGVkX19mdF7tpjY15H58m4Ndqlj912dJO7HjaMo=}"/>
+		<alias name="aliasPwwarner" password="{RSA:f5dQeAApVireAQ1oElGi0gtmsb4Zvwqt0jyp29I9JKdZu0HpGH8SGtfonh79d5MICCfmk4ssemypbn5mK6kRYgO9rSl2DiQt1oHdA8eGpQM0pNpTkrnt8Cw8qBppWCKRNMrzMyOjaP4m8+NQvuaFH+o1toailZWQv3sycdYQomsH2hVsDUQSYy0NpYb6vXTOHU46Efr2RR/YQKdEspmIE2t7qX3bQHNgBB7Nx3sLo7B3GoMJp6VpogRPNAgRqe/kn50WumQE1LbATGGcpORWhTpHfXYs7tIqhp1718e9QgERx0VFaKllG5qAzkUgvGZJ7Xu2klRbOV6OzuZNVnluIg==}"/>
+		<alias name="aliasPwalice" password="{AES:U2FsdGVkX19uoUxxkyvm8PB6lITRQe+JXnGORC231r0=}"/>
+	  	<alias name="aliasPwbob" password="{AES:U2FsdGVkX1+5jUSQ44NzlXF/unTsX96tdutW/3t3Epw=}"/>
+	  	<alias name="aliasPwcharlie" password="{AES:U2FsdGVkX1/ecsqErHF/DG6dUtA0MPPNlbFSUPCjk/k=}"/>
+	  	<alias name="aliasPweve" password="{AES:U2FsdGVkX1/L4N+C8fvzKJ7YPrl4n+Txn2Nmp2QzMRA=}"/>
+	  	<alias name="aliasPwfrank" password="{AES:U2FsdGVkX18jgvxkRzd56ac1wymE6wkuhQymKWw1IsQ=}"/>
+	  	<alias name="aliasPwgrace" password="{AES:U2FsdGVkX18sGgS7/VicZr23aFvD6WkvP4b104VcHOQYYfqtI8ztbId70qNh6I0p}"/>
+	  	<alias name="aliasPwheidi" password="{AES:U2FsdGVkX18VDDTuFMSnC5GNuxuUCxmirkAQvrdc1YCn2WoctR/uxh+fAllAKQEO}"/>
+	  	<alias name="aliasPwivan" password="{AES:U2FsdGVkX18l6NA0k9diww9fPUgalNEjFITJKbiSuTU=}"/>  	
   </aliases>
 </cluster>
