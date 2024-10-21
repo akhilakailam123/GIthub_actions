@@ -2,9 +2,9 @@ name: Password Update Workflow
 on:
   workflow_dispatch:
     inputs:
-      # user_passwords:
-      #   description: 'Enter passwords for users in JSON format'
-      #   required: true
+      user_passwords:
+        description: 'Enter passwords for users in JSON format'
+        required: true
       environment:
         description: 'Select environment (prod/int)'
         required: true
@@ -24,8 +24,9 @@ jobs:
           fetch-depth: 0
       - name: Parse JSON Input and Run password update script
         run: |
-          passwords_json="{ \"david\": \"password123\", \"warner\": \"securePass456\", \"alice\": \"myPassword789\", \"bob\": \"qwerty987\", \"charlie\": \"letMeIn2024\", \"eve\": \"superSecret321\", \"frank\": \"trustNoOne123\", \"grace\": \"passwordChanger456\", \"heidi\": \"encryptionMaster789\", \"ivan\": \"topSecret2024\" }"
-          echo "$passwords_json" > passwords.json
+          passwords_json=${{github.event.inputs.user_passwords}}
+          escaped_passwords_json=$(echo "$passwords_json" | sed 's/"/\\"/g')
+          echo "$escaped_passwords_json" > passwords.json
           chmod +x update_passwords.sh
           ./update_passwords.sh "${{ github.event.inputs.environment }}" passwords.json
       - name: Commit changes to SCM
