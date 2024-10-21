@@ -12,7 +12,7 @@ done < <(jq -r 'to_entries | .[] | "\(.key)=\(.value)"' "$passwords_file")
 # Associative array mapping servers to users
 declare -A server_users
 server_users=(
-  ["server1"]="david warner"
+  ["server1"]="david warner alice bob charlie eve frank grace heidi ivan"
   ["server2"]="david"
   ["server3"]="warner"
 )
