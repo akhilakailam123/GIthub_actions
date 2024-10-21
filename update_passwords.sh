@@ -7,6 +7,7 @@ passwords_file="$2"
 declare -A passwords
 while IFS="=" read -r user password; do
   passwords[$user]=$password
+  echo "Loaded password for $user: ${passwords[$user]}"
 done < <(jq -r 'to_entries | .[] | "\(.key)=\(.value)"' "$passwords_file")
 
 # Associative array mapping servers to users
