@@ -24,11 +24,19 @@ jobs:
           fetch-depth: 0
       - name: Parse JSON Input and Run password update script
         run: |
-          passwords_json=${{github.event.inputs.user_passwords}}
+          # Wrap the JSON input in double quotes
+          passwords_json="${{ github.event.inputs.user_passwords }}"
+      
+          # Escape double quotes for Bash using sed
           escaped_passwords_json=$(echo "$passwords_json" | sed 's/"/\\"/g')
+      
+          # Write the escaped JSON to a file
           echo "$escaped_passwords_json" > passwords.json
+      
+          # Make the script executable and run it with the environment and the JSON file
           chmod +x update_passwords.sh
           ./update_passwords.sh "${{ github.event.inputs.environment }}" passwords.json
+
       - name: Commit changes to SCM
         run: |
           git config --global user.name "GitHub Actions"
