@@ -14,6 +14,7 @@ on:
           - int
 permissions:
   contents: write
+
 jobs:
   update-password:
     runs-on: ubuntu-latest
@@ -22,17 +23,28 @@ jobs:
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
+
+      - name: Install jq
+        run: sudo apt-get install jq -y
+
       - name: Parse JSON Input and Run password update script
         run: |
-          # Directly assign the JSON input without any additional escaping
+          # Store the JSON input in a variable
           passwords_json='${{ github.event.inputs.user_passwords }}'
           
-          # Ensure the JSON string is valid and properly passed to the script
+          # Save the JSON to a file
           echo "$passwords_json" > passwords.json
           
-          # Make the script executable and run it with environment and passwords file
+          # Ensure jq is available
+          if ! command -v jq &> /dev/null; then
+            echo "jq is required but not installed. Exiting."
+            exit 1
+          fi
+          
+          # Run the password update script
           chmod +x update_passwords.sh
           ./update_passwords.sh "${{ github.event.inputs.environment }}" passwords.json
+
       - name: Commit changes to SCM
         run: |
           git config --global user.name "GitHub Actions"
