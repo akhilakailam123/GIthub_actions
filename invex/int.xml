@@ -3,5 +3,13 @@
   <aliases>
 	  <alias name="aliasPwdavid" password="{AES:U2FsdGVkX194cfEM1M2hfuCJOWa60zr/OVTV/UrCNDE=}"/>
 	  <alias name="aliasPwwarner" password="{RSA:AKLihSS//vecMKxQOXhvAuSfqq13D1utkxIRiZOj6p5HnWNDh0MdG3X3lJLG/hsctmAQwIwY3O3aqpX+RVQ3M3lm/NYoh7deKMdYcW7u3YNQt+qsL5L3SPXDHsHWoNLvSpt5bBpTOwWolc7YgMEjvQ3CovbFwUafaIg8MkSl8DCt/3CBsjcWhagShLcqPJDa3WGiNBqAsZknyW4ip6bXNaOX8wKYcs18sFg+PXCXewQCtORt09/ef+HGe5nOLqwnxVLOwSXr5Zu+FWiGQnyrxsHYcrlL8QWU14Bz3rZ5pCVKIUJGs3R8UTNwbrJrAtklir/hb6ScALJ8RvCPvK931A==}"/>
-	</aliases>
+	  <alias name="aliasPwalice" password="{AES:examplepsswd}"/>
+	  <alias name="aliasPwbob" password="{AES:examplepsswd}"/>
+	  <alias name="aliasPwcharlie" password="{AES:examplepsswd}"/>
+	  <alias name="aliasPweve" password="{AES:examplepsswd}"/>
+	  <alias name="aliasPwfrank" password="{AES:examplepsswd}"/>
+	  <alias name="aliasPwgrace" password="{AES:examplepsswd}"/>
+	  <alias name="aliasPwheidi" password="{AES:examplepsswd}"/>
+	  <alias name="aliasPwivan" password="{AES:examplepsswd}"/>	
+  </aliases>
 </cluster>
