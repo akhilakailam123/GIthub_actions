@@ -1,7 +1,7 @@
 <cluster>
   <name>cluster2</name>
   <aliases>
-	  <alias name="aliasPwdavid" password="{AES:U2FsdGVkX1+qdzVAWiE13bWAPPJHm6Nq1URF0BGjeOw=}"/>
-	  <alias name="aliasPwwarner" password="{RSA:}"/>
+	  <alias name="aliasPwdavid" password="{AES:U2FsdGVkX194cfEM1M2hfuCJOWa60zr/OVTV/UrCNDE=}"/>
+	  <alias name="aliasPwwarner" password="{RSA:AKLihSS//vecMKxQOXhvAuSfqq13D1utkxIRiZOj6p5HnWNDh0MdG3X3lJLG/hsctmAQwIwY3O3aqpX+RVQ3M3lm/NYoh7deKMdYcW7u3YNQt+qsL5L3SPXDHsHWoNLvSpt5bBpTOwWolc7YgMEjvQ3CovbFwUafaIg8MkSl8DCt/3CBsjcWhagShLcqPJDa3WGiNBqAsZknyW4ip6bXNaOX8wKYcs18sFg+PXCXewQCtORt09/ef+HGe5nOLqwnxVLOwSXr5Zu+FWiGQnyrxsHYcrlL8QWU14Bz3rZ5pCVKIUJGs3R8UTNwbrJrAtklir/hb6ScALJ8RvCPvK931A==}"/>
 	</aliases>
 </cluster>
