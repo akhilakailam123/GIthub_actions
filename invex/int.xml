@@ -10,6 +10,9 @@
 	  <alias name="aliasPwfrank" password="{AES:U2FsdGVkX1/pnPbPw3wTBSzPPzFMOVKtPGaTV2ENRDM=}"/>
 	  <alias name="aliasPwgrace" password="{AES:U2FsdGVkX19lEhR8R8gmwluwFtVOXHfW6FVIerGGJPobPH11/j6AKP2PClXvxwGb}"/>
 	  <alias name="aliasPwheidi" password="{AES:U2FsdGVkX19uWbaj1OvH/trmNV43i0pxPYrowH3WHQXUeG9FwCj1SIw4PfyfMFPQ}"/>
-	  <alias name="aliasPwivan" password="{AES:U2FsdGVkX1+oHJ6mFCurmlAyqklQnOVzngvDPoFp3qg=}"/>	
+	  <alias name="aliasPwivan" password="{AES:U2FsdGVkX1+oHJ6mFCurmlAyqklQnOVzngvDPoFp3qg=}"/>
+	  <alias name="aliasPwirfan" password="{AES:U2FsdGVkX1+oHJ6mFCurmlAyqklQnOVzngvDPoFp3qg=}"/>
+	  <alias name="aliasPwarha" password="{AES:U2FsdGVkX1+oHJ6mFCurmlAyqklQnOVzngvDPoFp3qg=}"/>
+	  
   </aliases>
 </cluster>
