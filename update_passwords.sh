@@ -60,21 +60,32 @@ for server in "${!server_users[@]}"; do
             echo "Error: Failed to update AES password in $xml_file for $username"
             continue
           }
-
         elif [[ $encryptionMethod == "RSA" ]]; then
           echo "Detected RSA encryption method for $username"
+          openssl genpkey -algorithm RSA -out private_key.pem -pkeyopt rsa_keygen_bits:2048 || {
+            echo "Error: RSA key generation failed for $username"
+            continue
+          }
+          openssl rsa -pubout -in private_key.pem -out public_key.pem || {
+            echo "Error: RSA public key export failed for $username"
+            rm -f private_key.pem public_key.pem
+            continue
+          }
 
-          # Assuming RSA public key already exists, no need to regenerate every time
           rsa_encrypted_password=$(echo -n "$new_password" | openssl pkeyutl -encrypt -pubin -inkey public_key.pem | base64 | tr -d '\n') || {
             echo "Error: RSA encryption failed for $username"
+            rm -f private_key.pem public_key.pem
             continue
           }
 
           sed -i "/<alias name=\"aliasPw${username}\"/s|password=\"[^\"]*\"|password=\"{RSA:${rsa_encrypted_password}}\"|" "$xml_file" || {
             echo "Error: Failed to update RSA password in $xml_file for $username"
+            rm -f private_key.pem public_key.pem
             continue
           }
 
+          # Clean up RSA keys
+          rm -f private_key.pem public_key.pem
         else
           echo "### WARNING ### Unknown encryption method for $username in $xml_file"
         fi
