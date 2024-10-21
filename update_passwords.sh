@@ -3,17 +3,10 @@
 env="$1"
 passwords_file="$2"
 
-# Ensure jq is installed
-if ! command -v jq &> /dev/null; then
-  echo "jq is required but not installed. Exiting."
-  exit 1
-fi
-
 # Load passwords from JSON file using jq
 declare -A passwords
 while IFS="=" read -r user password; do
   passwords[$user]=$password
-  echo "Loaded password for $user"
 done < <(jq -r 'to_entries | .[] | "\(.key)=\(.value)"' "$passwords_file")
 
 # Associative array mapping servers to users
