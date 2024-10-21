@@ -11,8 +11,8 @@
 	  <alias name="aliasPwgrace" password="{AES:U2FsdGVkX18GSIFGZiKthDeXbjkqF73wqcK0gafwnymqaQyMTVyK3RNyhu1W4Esl}"/>
 	  <alias name="aliasPwheidi" password="{AES:U2FsdGVkX19l7tN7FiC3fNTqXRzDUnUud27zHupKRkX8Z/Ty5sdTkIHNPzoKQAB4}"/>
 	  <alias name="aliasPwivan" password="{AES:U2FsdGVkX1/85yDvPSGmqTvH4/wg+GqiSR5jiu9Z+PM=}"/>
-	  <alias name="aliasPwirfan" password="{AES:U2FsdGVkX1+oHJ6mFCurmlAyqklQnOVzngvDPoFp3qg=}"/>
-	  <alias name="aliasPwarha" password="{AES:U2FsdGVkX1+oHJ6mFCurmlAyqklQnOVzngvDPoFp3qg=}"/>
+	  <alias name="aliasPwirfan" password="{AES:}"/>
+	  <alias name="aliasPwarha" password="{AES:}"/>
 	  
   </aliases>
 </cluster>
