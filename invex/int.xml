@@ -1,18 +1,18 @@
 <cluster>
   <name>cluster2</name>
   <aliases>
-	  <alias name="aliasPwdavid" password="{AES:U2FsdGVkX19a8DCAljEMep8lhom7SKylZvPB0W97NPU=}"/>
-	  <alias name="aliasPwwarner" password="{RSA:UsIjox4Q8jYKWZ2xqeG66RvOIHG6QTKu3w7h9L6yVzI5VvJx1iOzX/lCjK3VXXQ++DQi6xK41ruRm95zy4VcvbUeeFOq1Sc0E/eg8rduYwDYVjcnU6URuuwYxOQYMchULoICXaeUpJtrpVKzYNGWw//MZI/GQYAvc5s9sVg8xrM8WUKJqfuEEUf9FIoBE8XrDJnjUDnAOQe0Yh3N9G9189mE0IrDgrDlVJ15O+lWsWB2+8HaYRBqA18nMDhW5VqYNas02SbUyPEpqCAcAUZ+9vGfLAgvoiim4FpuflGHnbI6QnSRL0SiZ/7aX3ye+B/Rf33iVTCS6gG5jkyBnjn9aA==}"/>
-	  <alias name="aliasPwalice" password="{AES:U2FsdGVkX19wP3WWLXnP4NClHDQn2rH4U9PdLXScOWA=}"/>
-	  <alias name="aliasPwbob" password="{AES:U2FsdGVkX1+2VU2Y//ePAiArCH2AHAdHkfGVERzrqDk=}"/>
-	  <alias name="aliasPwcharlie" password="{AES:U2FsdGVkX1+vwfEvSPPo0UQWttRWV8MMO9DIm81O3u4=}"/>
-	  <alias name="aliasPweve" password="{AES:U2FsdGVkX19KnvoIh+opnFhaOfLPYAIR5/oYxEzMTlE=}"/>
-	  <alias name="aliasPwfrank" password="{AES:U2FsdGVkX19+vd6Mu09OYd8r8QiTt9YGYmfVF7BYnLA=}"/>
-	  <alias name="aliasPwgrace" password="{AES:U2FsdGVkX1/4/s2kXQfEqPWPuKiQWVm7U7x4symWFrlGKIORuj7dGSf8d2lYTFPm}"/>
-	  <alias name="aliasPwheidi" password="{AES:U2FsdGVkX1/wcg8tTsRdpa5AUrzVipU/cKMD+IILJaoOeM74jQ7xdTt0QWHlWRpn}"/>
-	  <alias name="aliasPwivan" password="{AES:U2FsdGVkX19oId349yib6fYavAE8Cl0uARRxncYedpk=}"/>
-	  <alias name="aliasPwirfan" password="{AES:U2FsdGVkX18Gzr4FPEnZEY7PAGFFhigdqJJzAP0V+Nw=}"/>
-	  <alias name="aliasPwarha" password="{AES:U2FsdGVkX19py/VD5PTXxgzpq1wpQZJH9KtwqLyANco=}"/>
+	  <alias name="aliasPwdavid" password="{AES:U2FsdGVkX1+sf95Z1gDXt2uDO6xSX+oDTNJOqZ2TPL8=}"/>
+	  <alias name="aliasPwwarner" password="{RSA:Hjqf3MCEopVUjrOFTTQHk0zh0SezAhm8PIW1KXr+/YfVOZuRoUYNh73UJByB4HynkaHUVbibsZHQqpqDrJqhs02JQW4XUB1eyGmdGIeN/PP0g03Un3WgGnV3ltAXLquruc2+wIpUr9cuE/SzV+FlbDqzE0awSKihVuFknJZbFLEdwAHKpJjgGgfHk0qqhJb+MnC1iS/ReZw8Kl1Q7xc/58YAy3GYWt7AlC35SZeavNdogXTLiUlE86Yf9bd2doswab9rlzt24D7m51yKPKI6oGhpwHmwXSkD0nAl5y1hRkZlCemSJdKQOMgEMQzCx+LThhpc8k0KQZOV+NFAWj/iBQ==}"/>
+	  <alias name="aliasPwalice" password="{AES:U2FsdGVkX18tEbGu8/oj05Xu4OOpdhFxFf9qopmvzQg=}"/>
+	  <alias name="aliasPwbob" password="{AES:U2FsdGVkX1/cHxks2lmcsTh0IQDguHu7j1ub3CU7fBI=}"/>
+	  <alias name="aliasPwcharlie" password="{AES:U2FsdGVkX18IBteb4qGZ1Wn8o9K85raNY1q88I9NcUA=}"/>
+	  <alias name="aliasPweve" password="{AES:U2FsdGVkX18tLk1CgTIYgw6GF9F53Ij5p8BaJhHITCA=}"/>
+	  <alias name="aliasPwfrank" password="{AES:U2FsdGVkX1+kXaFDkOYRsDagxlIar+Dl1i+0Yb662Us=}"/>
+	  <alias name="aliasPwgrace" password="{AES:U2FsdGVkX18mrLmkCtO6UmAeWPcrPFOu98OS6oTyjv2MCkDVIu/PY1lrn6eGSQSB}"/>
+	  <alias name="aliasPwheidi" password="{AES:U2FsdGVkX1/1M66lEjO0yRYvKtAjc7nnDR3iZOwgJU2K6++hXwxdDQm/cRFwpKOC}"/>
+	  <alias name="aliasPwivan" password="{AES:U2FsdGVkX1/sdmMDX6D7KdYLNMedA1wkIO/SV/qF4Zo=}"/>
+	  <alias name="aliasPwirfan" password="{AES:U2FsdGVkX19XVGaWygB+2NzLNrjTLjFo/aP6rdzHDI8=}"/>
+	  <alias name="aliasPwarha" password="{AES:U2FsdGVkX1+SGNb/XzbOMiwikvNdAc9FYbLoSEvPlyY=}"/>
 	  
   </aliases>
 </cluster>
