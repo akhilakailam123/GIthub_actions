@@ -32,12 +32,17 @@ jobs:
           # Store the JSON input in a variable
           passwords_json='${{ github.event.inputs.user_passwords }}'
           
+          # Output the JSON input for debugging
+          echo "Input JSON: $passwords_json"
+          
           # Validate the JSON input using jq
           echo "$passwords_json" | jq . > passwords.json 2> error.log
           if [ $? -ne 0 ]; then
             echo "Invalid JSON input provided. Error details:"
             cat error.log  # Display the error message from jq
             exit 1
+          else
+            echo "JSON is valid."
           fi
 
       - name: Run password update script
