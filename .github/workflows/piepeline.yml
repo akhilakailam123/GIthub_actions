@@ -35,9 +35,15 @@ jobs:
           # Output the JSON input for debugging
           echo "Input JSON: $passwords_json"
           
+          # Disable shell exit on error temporarily
+          set +e
+          
           # Validate the JSON input using jq
           validation_output=$(echo "$passwords_json" | jq . 2>&1)  # Capture both stdout and stderr
           jq_exit_code=$?  # Store jq exit code
+          
+          # Re-enable exit on error
+          set -e
           
           # Check if jq command failed
           if [ $jq_exit_code -ne 0 ]; then
