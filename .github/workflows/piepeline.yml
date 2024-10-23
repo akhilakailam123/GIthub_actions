@@ -33,14 +33,12 @@ jobs:
           passwords_json='${{ github.event.inputs.user_passwords }}'
           
           # Validate the JSON input using jq
-          echo "$passwords_json" | jq . > /dev/null 2>&1
+          echo "$passwords_json" | jq . > passwords.json 2> error.log
           if [ $? -ne 0 ]; then
-            echo "Invalid JSON input provided. Exiting."
+            echo "Invalid JSON input provided. Error details:"
+            cat error.log  # Display the error message from jq
             exit 1
           fi
-          
-          # Save the JSON to a file after validation
-          echo "$passwords_json" > passwords.json
 
       - name: Run password update script
         run: |
