@@ -29,21 +29,20 @@ jobs:
 
       - name: Parse and validate JSON Input
         run: |
-          # Store the JSON input in a variable
-          passwords_json='${{ github.event.inputs.user_passwords }}'
-          
-          # Output the JSON input for debugging
-          echo "Input JSON: $passwords_json"
-          
           # Validate the JSON input using jq
+          set +e  # Disable immediate exit on error
           echo "$passwords_json" | jq . > passwords.json 2> error.log
+          set -e  # Re-enable immediate exit
+        
+          # Check if jq command failed
           if [ $? -ne 0 ]; then
             echo "Invalid JSON input provided. Error details:"
             cat error.log  # Display the error message from jq
-            exit 1
+            exit 1  # Exit with an error
           else
             echo "JSON is valid."
           fi
+
 
       - name: Run password update script
         run: |
