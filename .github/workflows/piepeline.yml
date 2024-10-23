@@ -51,11 +51,6 @@ jobs:
           else
             echo "JSON is valid."
           fi
-      
-          # Optional: Display the saved valid JSON
-          echo "Passwords JSON:"
-          echo "$passwords_json" > passwords.json
-          cat passwords.json
 
       - name: Run password update script
         run: |
