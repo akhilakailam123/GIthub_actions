@@ -27,21 +27,24 @@ jobs:
       - name: Install jq
         run: sudo apt-get install jq -y
 
-      - name: Parse JSON Input and Run password update script
+      - name: Parse and validate JSON Input
         run: |
           # Store the JSON input in a variable
           passwords_json='${{ github.event.inputs.user_passwords }}'
           
-          # Save the JSON to a file
-          echo "$passwords_json" > passwords.json
-          
-          # Ensure jq is available
-          if ! command -v jq &> /dev/null; then
-            echo "jq is required but not installed. Exiting."
+          # Validate the JSON input using jq
+          echo "$passwords_json" | jq . > /dev/null 2>&1
+          if [ $? -ne 0 ]; then
+            echo "Invalid JSON input provided. Exiting."
             exit 1
           fi
           
-          # Run the password update script
+          # Save the JSON to a file after validation
+          echo "$passwords_json" > passwords.json
+
+      - name: Run password update script
+        run: |
+          # Run the password update script after validation
           chmod +x update_passwords.sh
           ./update_passwords.sh "${{ github.event.inputs.environment }}" passwords.json
 
